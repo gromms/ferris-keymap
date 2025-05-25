@@ -100,26 +100,27 @@ bool process_detected_host_os_kb(os_variant_t detected_os) {
         set_unicode_input_mode(UNICODE_MODE_LINUX);
         return false;
     }
+
+    keyrecord_t kr = {
+        .event = {
+            .pressed = true,
+            .time = timer_read()
+        }
+    };
+
     switch (detected_os) {
         case OS_MACOS:
         case OS_IOS:
             set_unicode_input_mode(UNICODE_MODE_MACOS);
-
-            keyrecord_t kr = {
-                .event = {
-                    .pressed = true,
-                    .time = timer_read()
-                }
-            };
-
             process_magic(QK_MAGIC_SWAP_ALT_GUI, &kr);
-
             break;
         case OS_WINDOWS:
             set_unicode_input_mode(UNICODE_MODE_WINDOWS);
+            process_magic(QK_MAGIC_UNSWAP_ALT_GUI, &kr);
             break;
         case OS_LINUX:
             set_unicode_input_mode(UNICODE_MODE_LINUX);
+            process_magic(QK_MAGIC_UNSWAP_ALT_GUI, &kr);
             break;
         case OS_UNSURE:
             set_unicode_input_mode(UNICODE_MODE_LINUX);
